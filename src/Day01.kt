@@ -1,21 +1,43 @@
+import kotlin.math.abs
+
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
+    val testList1 = listOf(3, 4, 2, 1, 3, 3)
+    val testList2 = listOf(4, 3, 5, 3, 9, 3)
+
+    val lines = readInput("Day01_test")
+    val (input1, input2) = lines.map { line ->
+        val (first, second) = line.split("   ").map(String::toInt)
+        first to second
+    }.unzip()
+
+    "part 1" {
+        val result1 = part1(testList1, testList2)
+        check(result1 == 11)
+
+        val result2 = part1(input1, input2)
+        check(result2 == 3508942)
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
+    "part 2" {
+        val result1 = part2(testList1, testList2)
+        check(result1 == 31)
+
+        val result2 = part2(input1, input2)
+        check(result2 == 26593248)
     }
+}
 
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
+private fun part1(locationIds1: List<Int>, locationIds2: List<Int>): Int {
+    val locations1Ordered = locationIds1.sorted()
+    val locations2Ordered = locationIds2.sorted()
 
-    // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
+    val zippedValues = locations1Ordered.zip(locations2Ordered)
+    return zippedValues.sumOf { abs(it.first - it.second) }
+}
 
-    // Read the input from the `src/Day01.txt` file.
-    val input = readInput("Day01")
-    part1(input).println()
-    part2(input).println()
+private fun part2(locationIds1: List<Int>, locationIds2: List<Int>): Int {
+    return locationIds1.sumOf { location ->
+        val frequencyInSecondList = locationIds2.count { location == it }
+        location * frequencyInSecondList
+    }
 }
